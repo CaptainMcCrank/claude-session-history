@@ -233,10 +233,11 @@ def generate_markdown_summary(sessions_by_date: dict[str, list[dict]]) -> str:
             formatted_date = date_str
 
         lines.append(f"## {formatted_date}\n")
-        lines.append("| Project | Summary | Messages |")
-        lines.append("|---------|---------|----------|")
+        lines.append("| Session ID | Project | Summary | Messages |")
+        lines.append("|------------|---------|---------|----------|")
 
         for session in sessions:
+            session_id = session["session_id"][:8] if session["session_id"] else "?"
             project = format_project_path(session["project_path"])
             summary = session["summary"].replace("|", "\\|")
             msg_count = session["message_count"]
@@ -248,7 +249,7 @@ def generate_markdown_summary(sessions_by_date: dict[str, list[dict]]) -> str:
             else:
                 summary = f"**{summary}**"
 
-            lines.append(f"| `{project}` | {summary} | {msg_count} |")
+            lines.append(f"| `{session_id}` | `{project}` | {summary} | {msg_count} |")
 
         lines.append("")
 
@@ -294,11 +295,12 @@ def generate_text_summary(sessions_by_date: dict[str, list[dict]]) -> str:
         lines.append("-" * len(formatted_date))
 
         for session in sessions:
+            session_id = session["session_id"][:8] if session["session_id"] else "?"
             project = format_project_path(session["project_path"])
             summary = session["summary"]
             msg_count = session["message_count"]
 
-            lines.append(f"  [{project}]")
+            lines.append(f"  [{session_id}] {project}")
             lines.append(f"    {summary}")
             if msg_count > 0:
                 lines.append(f"    ({msg_count} messages)")
